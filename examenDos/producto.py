@@ -1,101 +1,101 @@
-# import pandas as pd
-# import numpy as np
-# import hashlib
-# import random
-# import re
-# from datetime import datetime, timedelta
+import pandas as pd
+import numpy as np
+import hashlib
+import random
+import re
+from datetime import datetime, timedelta
 
-# # 1. Generar dataset de usuarios
+# 1. Generar dataset de usuarios
 
-# nombres = ["Juan", "Camila", "Andrés", "María", "Sofía", "Pedro", "Luis", "Ana", "Valentina", "Carlos"]
-# apellidos = ["Gómez", "Martínez", "Pérez", "Rodríguez", "López", "Hernández", "García", "Ramírez"]
+nombres = ["Juan", "Camila", "Andrés", "María", "Sofía", "Pedro", "Luis", "Ana", "Valentina", "Carlos"]
+apellidos = ["Gómez", "Martínez", "Pérez", "Rodríguez", "López", "Hernández", "García", "Ramírez"]
 
-# roles = ["admin", "estudiante", "profesor"]
+roles = ["admin", "estudiante", "profesor"]
 
-# usuarios = []
-# for i in range(50):  # Cantidad aceptable de usuarios simulados
-#     nombre = random.choice(nombres) + " " + random.choice(apellidos)
-#     correo = nombre.lower().replace(" ", ".") + f"{random.randint(1,99)}@gmail.com"
-#     contraseña = hashlib.sha256(f"pass{i}".encode()).hexdigest()  # Hash seguro
-#     rol = random.choice(roles)
-#     fecha_registro = datetime.now() - timedelta(days=random.randint(1, 1000))
+usuarios = []
+for i in range(50):  # Cantidad aceptable de usuarios simulados
+    nombre = random.choice(nombres) + " " + random.choice(apellidos)
+    correo = nombre.lower().replace(" ", ".") + f"{random.randint(1,99)}@gmail.com"
+    contraseña = hashlib.sha256(f"pass{i}".encode()).hexdigest()  # Hash seguro
+    rol = random.choice(roles)
+    fecha_registro = datetime.now() - timedelta(days=random.randint(1, 1000))
     
-#     usuarios.append([nombre, correo, contraseña, rol, fecha_registro])
+    usuarios.append([nombre, correo, contraseña, rol, fecha_registro])
 
-# df_users = pd.DataFrame(usuarios, columns=["nombre", "correo", "contraseña", "rol", "fecha_registro"])
+df_users = pd.DataFrame(usuarios, columns=["nombre", "correo", "contraseña", "rol", "fecha_registro"])
 
-# # Guardar en CSV
-# df_users.to_csv("usuarios.csv", index=False)
+# Guardar en CSV
+df_users.to_csv("usuarios.csv", index=False)
 
-# print("=== Dataset de Usuarios ===")
-# print(df_users.head())
+print("=== Dataset de Usuarios ===")
+print(df_users.head())
 
-# # 2. Filtrar duplicados y correos inválidos con regex
+# 2. Filtrar duplicados y correos inválidos con regex
 
-# correo_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+correo_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
-# df_users["correo_valido"] = df_users["correo"].apply(lambda x: bool(re.match(correo_regex, x)))
-# df_clean = df_users[df_users["correo_valido"]]  # solo válidos
-# df_clean = df_clean.drop_duplicates(subset=["correo"])
+df_users["correo_valido"] = df_users["correo"].apply(lambda x: bool(re.match(correo_regex, x)))
+df_clean = df_users[df_users["correo_valido"]]  # solo válidos
+df_clean = df_clean.drop_duplicates(subset=["correo"])
 
-# print("\n=== Usuarios limpios (sin duplicados ni correos inválidos) ===")
-# print(df_clean.head())
-
-
-# # 3. Dataset simulado de hojas de vida
-
-# perfiles = ["Backend Developer", "Frontend Developer", "Fullstack", "Data Scientist"]
-# habilidades = {
-#     "Backend Developer": ["Python", "Django", "Flask", "SQL"],
-#     "Frontend Developer": ["React", "JavaScript", "CSS", "HTML"],
-#     "Fullstack": ["Node.js", "React", "MongoDB", "Express"],
-#     "Data Scientist": ["Python", "Pandas", "NumPy", "Machine Learning"]
-# }
-
-# hojas_vida = []
-# for i in range(50):
-#     nombre = random.choice(nombres) + " " + random.choice(apellidos)
-#     edad = random.randint(18, 40)
-#     perfil = random.choice(perfiles)
-#     skills = random.sample(habilidades[perfil], k=random.randint(2, 4))
-#     certificados = random.sample(["AWS", "Azure", "Google Cloud", "Scrum", "Docker"], k=random.randint(0, 3))
-#     proyectos = [f"https://github.com/user/proyecto{i}" for i in range(random.randint(1, 3))]
-#     resumen = " ".join(["Experiencia en"] + skills + ["con proyectos académicos y laborales."])
-#     semestre = random.randint(1, 10)
-
-#     hojas_vida.append([nombre, edad, perfil, skills, certificados, proyectos, resumen, semestre])
-
-# df_cv = pd.DataFrame(hojas_vida, columns=["nombre", "edad", "perfil", "habilidades", "certificados", "proyectos", "resumen", "semestre"])
-
-# print("\n=== Dataset de Hojas de Vida ===")
-# print(df_cv.head())
+print("\n=== Usuarios limpios (sin duplicados ni correos inválidos) ===")
+print(df_clean.head())
 
 
-# # Longitud promedio de resumen por semestre
-# df_cv["len_resumen"] = df_cv["resumen"].apply(len)
-# promedio_por_semestre = df_cv.groupby("semestre")["len_resumen"].mean()
+# 3. Dataset simulado de hojas de vida
 
-# print("\n=== Longitud promedio del resumen por semestre ===")
-# print(promedio_por_semestre)
+perfiles = ["Backend Developer", "Frontend Developer", "Fullstack", "Data Scientist"]
+habilidades = {
+    "Backend Developer": ["Python", "Django", "Flask", "SQL"],
+    "Frontend Developer": ["React", "JavaScript", "CSS", "HTML"],
+    "Fullstack": ["Node.js", "React", "MongoDB", "Express"],
+    "Data Scientist": ["Python", "Pandas", "NumPy", "Machine Learning"]
+}
 
-# # Detectar duplicados de certificados
-# df_cv["certificados_str"] = df_cv["certificados"].astype(str)
-# duplicados_cert = df_cv[df_cv.duplicated("certificados_str", keep=False)]
+hojas_vida = []
+for i in range(50):
+    nombre = random.choice(nombres) + " " + random.choice(apellidos)
+    edad = random.randint(18, 40)
+    perfil = random.choice(perfiles)
+    skills = random.sample(habilidades[perfil], k=random.randint(2, 4))
+    certificados = random.sample(["AWS", "Azure", "Google Cloud", "Scrum", "Docker"], k=random.randint(0, 3))
+    proyectos = [f"https://github.com/user/proyecto{i}" for i in range(random.randint(1, 3))]
+    resumen = " ".join(["Experiencia en"] + skills + ["con proyectos académicos y laborales."])
+    semestre = random.randint(1, 10)
 
-# print("\n=== Hojas de vida con certificados duplicados ===")
-# print(duplicados_cert[["nombre", "certificados"]])
+    hojas_vida.append([nombre, edad, perfil, skills, certificados, proyectos, resumen, semestre])
 
-# # Agrupar estudiantes por tecnologías dominantes
-# tech_count = df_cv.explode("habilidades").groupby("habilidades")["nombre"].count().sort_values(ascending=False)
+df_cv = pd.DataFrame(hojas_vida, columns=["nombre", "edad", "perfil", "habilidades", "certificados", "proyectos", "resumen", "semestre"])
 
-# print("\n=== Agrupación por habilidades dominantes ===")
-# print(tech_count)
+print("\n=== Dataset de Hojas de Vida ===")
+print(df_cv.head())
 
-# # Filtrar hojas de vida incompletas (sin proyectos o certificados)
-# incompletas = df_cv[(df_cv["proyectos"].str.len() == 0) | (df_cv["certificados"].str.len() == 0)]
 
-# print("\n=== Hojas de vida incompletas ===")
-# print(incompletas)
+# Longitud promedio de resumen por semestre
+df_cv["len_resumen"] = df_cv["resumen"].apply(len)
+promedio_por_semestre = df_cv.groupby("semestre")["len_resumen"].mean()
+
+print("\n=== Longitud promedio del resumen por semestre ===")
+print(promedio_por_semestre)
+
+# Detectar duplicados de certificados
+df_cv["certificados_str"] = df_cv["certificados"].astype(str)
+duplicados_cert = df_cv[df_cv.duplicated("certificados_str", keep=False)]
+
+print("\n=== Hojas de vida con certificados duplicados ===")
+print(duplicados_cert[["nombre", "certificados"]])
+
+# Agrupar estudiantes por tecnologías dominantes
+tech_count = df_cv.explode("habilidades").groupby("habilidades")["nombre"].count().sort_values(ascending=False)
+
+print("\n=== Agrupación por habilidades dominantes ===")
+print(tech_count)
+
+# Filtrar hojas de vida incompletas (sin proyectos o certificados)
+incompletas = df_cv[(df_cv["proyectos"].str.len() == 0) | (df_cv["certificados"].str.len() == 0)]
+
+print("\n=== Hojas de vida incompletas ===")
+print(incompletas)
 
 
 
@@ -105,7 +105,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # -----------------------------------
-# 1️⃣ Generar dataset simulado
+# Generar dataset simulado
 # -----------------------------------
 
 np.random.seed(42)
@@ -153,7 +153,7 @@ print("=== Dataset simulado ===")
 print(df.head(), "\n")
 
 # -----------------------------------
-# 2️⃣ Clasificar perfiles automáticamente
+# Clasificar perfiles automáticamente
 # -----------------------------------
 
 def clasificar_perfil(hab):
@@ -171,7 +171,7 @@ def clasificar_perfil(hab):
 df["perfil"] = df["habilidades"].apply(clasificar_perfil)
 
 # -----------------------------------
-# 3️⃣ Comparar longitud promedio del resumen por semestre
+# Comparar longitud promedio del resumen por semestre
 # -----------------------------------
 
 df["longitud_resumen"] = df["resumen"].apply(len)
@@ -184,7 +184,7 @@ plt.title("Longitud promedio del resumen profesional por semestre")
 plt.show()
 
 # -----------------------------------
-# 4️⃣ Detectar duplicados en certificados o proyectos
+# Detectar duplicados en certificados o proyectos
 # -----------------------------------
 
 duplicados_cert = df[df.duplicated("certificados", keep=False)]
@@ -197,7 +197,7 @@ print("=== Proyectos duplicados ===")
 print(duplicados_proy[["nombre", "proyectos"]].sort_values("proyectos"), "\n")
 
 # -----------------------------------
-# 5️⃣ Agrupar por tecnologías dominantes
+# Agrupar por tecnologías dominantes
 # -----------------------------------
 
 conteo_perfil = df["perfil"].value_counts().reset_index()
@@ -209,7 +209,7 @@ plt.title("Distribución de estudiantes por perfil tecnológico")
 plt.show()
 
 # -----------------------------------
-# 6️⃣ Filtrar hojas de vida incompletas
+# Filtrar hojas de vida incompletas
 # -----------------------------------
 
 incompletos = df[df["completo"] == False]
@@ -217,10 +217,34 @@ print("=== Hojas de vida incompletas ===")
 print(incompletos[["nombre", "completo"]], "\n")
 
 # -----------------------------------
-# 7️⃣ Mostrar resumen general
+# Mostrar resumen general
 # -----------------------------------
 
 plt.figure(figsize=(8,5))
 sns.countplot(data=df, x="semestre", hue="perfil", palette="coolwarm")
 plt.title("Perfiles por semestre académico")
+plt.show()
+
+
+# Porcentaje de hojas de vida completas vs incompletas
+completo_counts = df["completo"].value_counts()
+plt.figure(figsize=(5,5))
+plt.pie(
+    completo_counts,
+    labels=["Completas", "Incompletas"],
+    autopct="%1.1f%%",
+    startangle=90,
+    colors=["#66b3ff", "#ff9999"]
+)
+plt.title("Porcentaje de hojas de vida completas vs incompletas")
+plt.show()
+
+
+#  Edad promedio por semestre
+edad_semestre = df.groupby("semestre")["edad"].mean().reset_index()
+plt.figure(figsize=(7,4))
+sns.lineplot(data=edad_semestre, x="semestre", y="edad", marker="o", color="orange")
+plt.title("Edad promedio por semestre académico")
+plt.xlabel("Semestre")
+plt.ylabel("Edad promedio")
 plt.show()
