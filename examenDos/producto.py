@@ -1,103 +1,103 @@
-import pandas as pd
-import numpy as np
-import hashlib
-import random
-import re
-from datetime import datetime, timedelta
+#import pandas as pd
+#import numpy as np
+#import hashlib
+#import random
+#import re
+#from datetime import datetime, timedelta
 
 # 1. Generar dataset de usuarios
-
-nombres = ["Juan", "Camila", "Andrés", "María", "Sofía", "Pedro", "Luis", "Ana", "Valentina", "Carlos"]
-apellidos = ["Gómez", "Martínez", "Pérez", "Rodríguez", "López", "Hernández", "García", "Ramírez"]
-
-roles = ["admin", "estudiante", "profesor"]
-
-usuarios = []
-for i in range(50):  # Cantidad aceptable de usuarios simulados
-    nombre = random.choice(nombres) + " " + random.choice(apellidos)
-    correo = nombre.lower().replace(" ", ".") + f"{random.randint(1,99)}@gmail.com"
-    contraseña = hashlib.sha256(f"pass{i}".encode()).hexdigest()  # Hash seguro
-    rol = random.choice(roles)
-    fecha_registro = datetime.now() - timedelta(days=random.randint(1, 1000))
-    
-    usuarios.append([nombre, correo, contraseña, rol, fecha_registro])
-
-df_users = pd.DataFrame(usuarios, columns=["nombre", "correo", "contraseña", "rol", "fecha_registro"])
-
-# Guardar en CSV
-df_users.to_csv("usuarios.csv", index=False)
-
-print("=== Dataset de Usuarios ===")
-print(df_users.head())
-
-# 2. Filtrar duplicados y correos inválidos con regex
-
-correo_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-
-df_users["correo_valido"] = df_users["correo"].apply(lambda x: bool(re.match(correo_regex, x)))
-df_clean = df_users[df_users["correo_valido"]]  # solo válidos
-df_clean = df_clean.drop_duplicates(subset=["correo"])
-
-print("\n=== Usuarios limpios (sin duplicados ni correos inválidos) ===")
-print(df_clean.head())
-
-
-# 3. Dataset simulado de hojas de vida
-
-perfiles = ["Backend Developer", "Frontend Developer", "Fullstack", "Data Scientist"]
-habilidades = {
-    "Backend Developer": ["Python", "Django", "Flask", "SQL"],
-    "Frontend Developer": ["React", "JavaScript", "CSS", "HTML"],
-    "Fullstack": ["Node.js", "React", "MongoDB", "Express"],
-    "Data Scientist": ["Python", "Pandas", "NumPy", "Machine Learning"]
-}
-
-hojas_vida = []
-for i in range(50):
-    nombre = random.choice(nombres) + " " + random.choice(apellidos)
-    edad = random.randint(18, 40)
-    perfil = random.choice(perfiles)
-    skills = random.sample(habilidades[perfil], k=random.randint(2, 4))
-    certificados = random.sample(["AWS", "Azure", "Google Cloud", "Scrum", "Docker"], k=random.randint(0, 3))
-    proyectos = [f"https://github.com/user/proyecto{i}" for i in range(random.randint(1, 3))]
-    resumen = " ".join(["Experiencia en"] + skills + ["con proyectos académicos y laborales."])
-    semestre = random.randint(1, 10)
-
-    hojas_vida.append([nombre, edad, perfil, skills, certificados, proyectos, resumen, semestre])
-
-df_cv = pd.DataFrame(hojas_vida, columns=["nombre", "edad", "perfil", "habilidades", "certificados", "proyectos", "resumen", "semestre"])
-
-print("\n=== Dataset de Hojas de Vida ===")
-print(df_cv.head())
-
-
-# Longitud promedio de resumen por semestre
-df_cv["len_resumen"] = df_cv["resumen"].apply(len)
-promedio_por_semestre = df_cv.groupby("semestre")["len_resumen"].mean()
-
-print("\n=== Longitud promedio del resumen por semestre ===")
-print(promedio_por_semestre)
-
-# Detectar duplicados de certificados
-df_cv["certificados_str"] = df_cv["certificados"].astype(str)
-duplicados_cert = df_cv[df_cv.duplicated("certificados_str", keep=False)]
-
-print("\n=== Hojas de vida con certificados duplicados ===")
-print(duplicados_cert[["nombre", "certificados"]])
-
-# Agrupar estudiantes por tecnologías dominantes
-tech_count = df_cv.explode("habilidades").groupby("habilidades")["nombre"].count().sort_values(ascending=False)
-
-print("\n=== Agrupación por habilidades dominantes ===")
-print(tech_count)
-
-# Filtrar hojas de vida incompletas (sin proyectos o certificados)
-incompletas = df_cv[(df_cv["proyectos"].str.len() == 0) | (df_cv["certificados"].str.len() == 0)]
-
-print("\n=== Hojas de vida incompletas ===")
-print(incompletas)
-
-
+#
+#nombres = ["Juan", "Camila", "Andrés", "María", "Sofía", "Pedro", "Luis", "Ana", "Valentina", "Carlos"]
+#apellidos = ["Gómez", "Martínez", "Pérez", "Rodríguez", "López", "Hernández", "García", "Ramírez"]
+#
+#roles = ["admin", "estudiante", "profesor"]
+#
+#usuarios = []
+#for i in range(50):  # Cantidad aceptable de usuarios simulados
+#    nombre = random.choice(nombres) + " " + random.choice(apellidos)
+#    correo = nombre.lower().replace(" ", ".") + f"{random.randint(1,99)}@gmail.com"
+#    contraseña = hashlib.sha256(f"pass{i}".encode()).hexdigest()  # Hash seguro
+#    rol = random.choice(roles)
+#    fecha_registro = datetime.now() - timedelta(days=random.randint(1, 1000))
+#    
+#    usuarios.append([nombre, correo, contraseña, rol, fecha_registro])
+#
+#df_users = pd.DataFrame(usuarios, columns=["nombre", "correo", "contraseña", "rol", "fecha_registro"])
+#
+## Guardar en CSV
+#df_users.to_csv("usuarios.csv", index=False)
+#
+#print("=== Dataset de Usuarios ===")
+#print(df_users.head())
+#
+## 2. Filtrar duplicados y correos inválidos con regex
+#
+#correo_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+#
+#df_users["correo_valido"] = df_users["correo"].apply(lambda x: bool(re.match(correo_regex, x)))
+#df_clean = df_users[df_users["correo_valido"]]  # solo válidos
+#df_clean = df_clean.drop_duplicates(subset=["correo"])
+#
+#print("\n=== Usuarios limpios (sin duplicados ni correos inválidos) ===")
+#print(df_clean.head())
+#
+#
+## 3. Dataset simulado de hojas de vida
+#
+#perfiles = ["Backend Developer", "Frontend Developer", "Fullstack", "Data Scientist"]
+#habilidades = {
+#    "Backend Developer": ["Python", "Django", "Flask", "SQL"],
+#    "Frontend Developer": ["React", "JavaScript", "CSS", "HTML"],
+#    "Fullstack": ["Node.js", "React", "MongoDB", "Express"],
+#    "Data Scientist": ["Python", "Pandas", "NumPy", "Machine Learning"]
+#}
+#
+#hojas_vida = []
+#for i in range(50):
+#    nombre = random.choice(nombres) + " " + random.choice(apellidos)
+#    edad = random.randint(18, 40)
+#    perfil = random.choice(perfiles)
+#    skills = random.sample(habilidades[perfil], k=random.randint(2, 4))
+#    certificados = random.sample(["AWS", "Azure", "Google Cloud", "Scrum", "Docker"], k=random.randint(0, 3))
+#    proyectos = [f"https://github.com/user/proyecto{i}" for i in range(random.randint(1, 3))]
+#    resumen = " ".join(["Experiencia en"] + skills + ["con proyectos académicos y laborales."])
+#    semestre = random.randint(1, 10)
+#
+#    hojas_vida.append([nombre, edad, perfil, skills, certificados, proyectos, resumen, semestre])
+#
+#df_cv = pd.DataFrame(hojas_vida, columns=["nombre", "edad", "perfil", "habilidades", "certificados", "proyectos", "resumen", "semestre"])
+#
+#print("\n=== Dataset de Hojas de Vida ===")
+#print(df_cv.head())
+#
+#
+## Longitud promedio de resumen por semestre
+#df_cv["len_resumen"] = df_cv["resumen"].apply(len)
+#promedio_por_semestre = df_cv.groupby("semestre")["len_resumen"].mean()
+#
+#print("\n=== Longitud promedio del resumen por semestre ===")
+#print(promedio_por_semestre)
+#
+## Detectar duplicados de certificados
+#df_cv["certificados_str"] = df_cv["certificados"].astype(str)
+#duplicados_cert = df_cv[df_cv.duplicated("certificados_str", keep=False)]
+#
+#print("\n=== Hojas de vida con certificados duplicados ===")
+#print(duplicados_cert[["nombre", "certificados"]])
+#
+## Agrupar estudiantes por tecnologías dominantes
+#tech_count = df_cv.explode("habilidades").groupby("habilidades")["nombre"].count().sort_values(ascending=False)
+#
+#print("\n=== Agrupación por habilidades dominantes ===")
+#print(tech_count)
+#
+## Filtrar hojas de vida incompletas (sin proyectos o certificados)
+#incompletas = df_cv[(df_cv["proyectos"].str.len() == 0) | (df_cv["certificados"].str.len() == 0)]
+#
+#print("\n=== Hojas de vida incompletas ===")
+##print(incompletas)
+#
+#
 
 import pandas as pd
 import numpy as np
